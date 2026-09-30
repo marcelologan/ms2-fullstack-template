@@ -9,8 +9,7 @@ router.post('/', UsuarioController.criar);
 router.post('/login', UsuarioController.login);
 
 // Rotas Protegidas (Exigem Token JWT)
+// Isolamento de dados: cada usuário acessa unicamente seus próprios dados
 router.post('/logout', authMiddleware, UsuarioController.logout as any);
-router.get('/', authMiddleware, UsuarioController.buscarTodos as any);
-router.get('/:id', authMiddleware, UsuarioController.buscarPorId as any);
 
 export default router;
