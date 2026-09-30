@@ -1,127 +1,158 @@
-# 💼 MS² Cash Flow — Sistema de Gestão Financeira Pessoal
+# 🚀 Template Full Stack — Node.js, Express, MySQL & React 19
 
-> **Guia Didático e Documentação Técnica de Instalação e Arquitetura**  
-> *Material elaborado para estudantes de Desenvolvimento de Sistemas, com foco em boas práticas de Full Stack, separação de responsabilidades e segurança.*
+![Node.js](https://img.shields.io/badge/Node.js-20%20LTS-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-5.x-000000?style=for-the-badge&logo=express&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-Stateless-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)
+
+> **Starter Kit & Template Monorepo Educacional e Profissional**  
+> Uma estrutura base sólida, moderna e segura para iniciar qualquer projeto Full Stack com autenticação completa, controle de sessão via JWT, hashing de senhas com bcrypt e persistência em banco relacional MySQL.
 
 ---
 
 ## 📑 Sumário
 
-1. [Visão Geral e Contexto do Projeto](#1-visão-geral-e-contexto-do-projeto)
-2. [Stack Tecnológica](#2-stack-tecnológica)
-3. [Repositórios Oficiais](#3-repositórios-oficiais)
-4. [Preparação do Ambiente de Desenvolvimento](#4-preparação-do-ambiente-de-desenvolvimento)
-5. [Passo a Passo: Backend (API)](#5-passo-a-passo-backend-api)
-   - [Configuração do Banco de Dados MySQL](#configuração-do-banco-de-dados-mysql)
-   - [Instalação e Arquivo `.env`](#instalação-e-arquivo-env)
-   - [Inicialização e Teste da API](#inicialização-e-teste-da-api)
-6. [Passo a Passo: Frontend (Interface Web)](#6-passo-a-passo-frontend-interface-web)
-   - [Instalação e Variáveis de Conexão](#instalação-e-variáveis-de-conexão)
-   - [Execução e Portas de Acesso](#execução-e-portas-de-acesso)
-7. [Guia de Exploração Didática e Roteiro de Testes](#7-guia-de-exploração-didática-e-roteiro-de-testes)
-8. [Pontos Críticos de Aprendizado Técnico](#8-pontos-críticos-de-aprendizado-técnico)
+1. [Visão Geral](#1-visão-geral)
+2. [Estrutura do Monorepositório](#2-estrutura-do-monorepositório)
+3. [Stack Tecnológica](#3-stack-tecnológica)
+4. [Pré-requisitos](#4-pré-requisitos)
+5. [Passo a Passo: Banco de Dados](#5-passo-a-passo-banco-de-dados)
+6. [Passo a Passo: Backend (API Express)](#6-passo-a-passo-backend-api-express)
+   - [Instalação e Configuração (`.env`)](#instalação-e-configuração-env)
+   - [Execução da API](#execução-da-api)
+   - [Tabela de Endpoints](#tabela-de-endpoints)
+7. [Passo a Passo: Frontend (React 19 + Vite)](#7-passo-a-passo-frontend-react-19--vite)
+   - [Instalação](#instalação)
+   - [Execução da Interface Web](#execução-da-interface-web)
+   - [Mapeamento de Rotas da SPA](#mapeamento-de-rotas-da-spa)
+8. [Fluxo de Autenticação e Roteiro de Testes](#8-fluxo-de-autenticação-e-roteiro-de-testes)
+9. [Guia de Extensão: Como Adicionar Novas Entidades](#9-guia-de-extensão-como-adicionar-novas-entidades)
+10. [Conceitos Críticos de Segurança e Arquitetura](#10-conceitos-críticos-de-segurança-e-arquitetura)
 
 ---
 
-## 1. Visão Geral e Contexto do Projeto
+## 1. Visão Geral
 
-O **MS² Cash Flow** é uma aplicação Full Stack projetada para resolver um desafio cotidiano fundamental: o **controle financeiro pessoal e a previsibilidade de fluxo de caixa**.
+Este template foi projetado para eliminar o retrabalho na inicialização de novos projetos web. Ele entrega a camada essencial de qualquer sistema pronta e funcionando:
 
-Em um cenário econômico dinâmico, indivíduos e pequenas operações precisam de visibilidade imediata sobre suas finanças para evitar inadimplência e planejar investimentos. A aplicação proporciona:
-- **Centralização:** Registro padronizado de receitas (entradas) e despesas (saídas).
-- **Indicadores Rápidos:** Visão instantânea do total de entradas, total de saídas e saldo líquido do mês corrente.
-- **Auditoria e Histórico:** Filtragem ágil por natureza de operação e controle total (criação, edição e exclusão segura) de registros.
-- **Privacidade e Isolamento:** Cada usuário possui acesso restrito apenas aos seus próprios dados por meio de autenticação baseada em tokens (JWT).
+- **Página Inicial (`/`):** Formulário de cadastro de usuário completo e responsivo com validação de dados no cliente e no servidor.
+- **Página de Login (`/login`):** Tela de autenticação com armazenamento seguro de token JWT no navegador.
+- **Painel Autenticado (`/dashboard`):** Demonstração prática do consumo de rotas privadas protegidas por Bearer Token, exibindo o perfil do usuário logado e a listagem de usuários do banco.
+- **Arquitetura Desacoplada (Monorepo):** Backend e Frontend residem no mesmo repositório, facilitando versionamento conjunto enquanto mantêm total independência de execução.
 
 ```mermaid
 flowchart LR
     subgraph Frontend["Front-end (Vite + React 19)"]
-        UI[Interface do Usuário]
-        State[Gerenciamento de Estados]
-        Fetch[HTTP Fetch / Bearer Token]
+        UI["Páginas: Cadastro (/), Login (/login), Dashboard (/dashboard)"]
+        State["Estados React (useState, useMemo)"]
+        Fetch["Fetch HTTP com Bearer Token"]
     end
 
     subgraph Backend["Back-end (Node.js + Express 5)"]
-        Router[Roteamento /api]
-        Auth[Middleware JWT & CORS]
-        Controllers[Controllers de Negócio]
-        Models[Models SQL]
+        Router["Rotas Express (/api/usuarios)"]
+        Auth["Middleware JWT & CORS"]
+        Controllers["UsuarioController"]
+        Models["UsuarioModel"]
     end
 
     subgraph Database["Banco de Dados Relacional"]
-        MySQL[(MySQL 8.x: celeste)]
+        MySQL[("MySQL 8.x (Banco celeste)")]
     end
 
     UI --> State --> Fetch
-    Fetch -- "JSON / REST (HTTP :3000)" --> Router
+    Fetch -- "JSON / REST (Porta 3000)" --> Router
     Router --> Auth --> Controllers --> Models
     Models --> MySQL
 ```
 
 ---
 
-## 2. Stack Tecnológica
+## 2. Estrutura do Monorepositório
+
+```text
+├── api-cashflow/                 # Backend RESTful (Node.js + Express + TypeScript)
+│   ├── src/
+│   │   ├── config/
+│   │   │   └── database.ts       # Pool de conexões MySQL2
+│   │   ├── controllers/
+│   │   │   └── usuarioController.ts # Regras de negócio de usuários e autenticação
+│   │   ├── middlewares/
+│   │   │   └── authMiddleware.ts # Verificação e validação do token JWT
+│   │   ├── models/
+│   │   │   └── usuarioModel.ts   # Consultas SQL seguras e tipadas
+│   │   ├── routes/
+│   │   │   ├── index.ts          # Centralizador de rotas (/api)
+│   │   │   └── usuarioRoutes.ts  # Endpoints de cadastro, login e consulta
+│   │   ├── types/
+│   │   │   └── index.ts          # Interfaces e tipos do TypeScript
+│   │   └── server.ts             # Inicialização do servidor Express com CORS e JSON
+│   ├── .env.example              # Modelo de variáveis de ambiente
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── front-cashflow/               # Frontend SPA (React 19 + TypeScript + Vite + Tailwind 4)
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── pages/
+│   │   │   │   ├── Cadastro.tsx  # Página Inicial com formulário de cadastro
+│   │   │   │   ├── Login.tsx     # Página de autenticação
+│   │   │   │   └── Dashboard.tsx # Área restrita e listagem de usuários
+│   │   │   ├── CadastroForm.tsx  # Componente isolado de cadastro com validações
+│   │   │   ├── Loginform.tsx     # Componente isolado de login
+│   │   │   ├── Header.tsx        # Barra de navegação responsiva com estado dinâmico
+│   │   │   ├── Footer.tsx        # Rodapé institucional
+│   │   │   ├── FeedbackModal.tsx # Modal animado para feedbacks de sucesso e erro
+│   │   │   └── ConfirmacaoModal.tsx # Modal genérico para confirmação de ações
+│   │   ├── App.tsx               # Roteamento SPA com React Router DOM v7
+│   │   ├── main.tsx              # Ponto de entrada React com StrictMode
+│   │   ├── types.ts              # Tipagens da entidade Usuario
+│   │   └── index.css             # Importação do Tailwind CSS v4
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── tsconfig.json
+│
+└── README.md                     # Documentação oficial do projeto
+```
+
+---
+
+## 3. Stack Tecnológica
 
 | Camada | Tecnologia | Versão | Função Principal |
 | :--- | :--- | :--- | :--- |
 | **Backend** | **Node.js** | `>= 20.x` | Ambiente de execução JavaScript server-side. |
 | **Backend** | **Express** | `^5.x` | Framework HTTP para criação de rotas, middlewares e APIs REST. |
-| **Backend** | **TypeScript** | `^5.x / 7.x` | Tipagem estática, reduzindo bugs em tempo de desenvolvimento. |
-| **Backend** | **MySQL2 (Promise)** | `^3.x` | Driver de alta performance com Pool de Conexões para consultas SQL. |
-| **Backend** | **bcrypt** | `^6.x` | Algoritmo criptográfico com *salt* para hashing seguro de senhas. |
-| **Backend** | **jsonwebtoken (JWT)** | `^9.x` | Mecanismo stateless de autenticação e proteção de rotas privadas. |
-| **Backend** | **CORS** | `^2.x` | Middleware de controle de acesso entre origens distintas. |
+| **Backend** | **TypeScript** | `^5.x / 7.x` | Tipagem estática para robustez e manutenção do código. |
+| **Backend** | **MySQL2 (Promise)** | `^3.x` | Driver de alta performance com Pool de Conexões assíncrono. |
+| **Backend** | **bcrypt** | `^6.x` | Algoritmo com *salt* para hashing criptográfico de senhas. |
+| **Backend** | **jsonwebtoken (JWT)** | `^9.x` | Autenticação stateless baseada em token com expiração. |
+| **Backend** | **CORS** | `^2.x` | Middleware de liberação de requisições cross-origin. |
 | **Backend** | **tsx** | `^4.x` | Execução ágil de TypeScript com recarregamento em tempo real (*watch*). |
-| **Frontend** | **React** | `^19.x` | Biblioteca componentizada para interfaces de usuário declarativas. |
-| **Frontend** | **Vite** | `^8.x` | Build tool e servidor de desenvolvimento ultra-rápido com HMR. |
-| **Frontend** | **Tailwind CSS** | `^4.x` | Framework de estilização utilitária moderna e responsiva. |
-| **Frontend** | **React Router DOM** | `^7.x` | Roteamento dinâmico no lado do cliente (SPA - Single Page Application). |
+| **Frontend** | **React** | `^19.x` | Biblioteca componentizada para interfaces declarativas modernas. |
+| **Frontend** | **Vite** | `^8.x` | Bundler e servidor de desenvolvimento ultra-rápido com HMR. |
+| **Frontend** | **Tailwind CSS** | `^4.x` | Framework utilitário moderno e altamente responsivo. |
+| **Frontend** | **React Router DOM** | `^7.x` | Gerenciamento de rotas e navegação SPA client-side. |
 | **Database** | **MySQL** | `^8.x` | Banco de dados relacional (banco `celeste`). |
 
 ---
 
-## 3. Repositório Oficial
+## 4. Pré-requisitos
 
-Para acessar, clonar ou contribuir com o projeto monorepositório contendo o back-end e o front-end integrados:
-
-- 🔗 **Repositório Unificado:** `https://github.com/marcelologan/ms2cashflow-ct.git`
-
-> 💡 *Estrutura Monorepo:* As duas aplicações residem no mesmo repositório:
-> - `api-cashflow/` (API Node.js + Express + TypeScript + MySQL)
-> - `front-cashflow/` (Interface React 19 + TypeScript + Vite + Tailwind CSS)
+Antes de iniciar, certifique-se de possuir em seu computador:
+1. **Node.js** (versão 20 LTS ou superior) — verifique com `node -v`
+2. **NPM** (versão 10.x ou superior) — verifique com `npm -v`
+3. **Git** — verifique com `git -v`
+4. **MySQL Server** (versão 8.0+) em execução localmente ou via Docker.
 
 ---
 
-## 4. Preparação do Ambiente de Desenvolvimento
+## 5. Passo a Passo: Banco de Dados
 
-Antes de inicializar o projeto, certifique-se de que sua máquina atende aos seguintes pré-requisitos:
-
-### Softwares Obrigatórios
-1. **Node.js**: Versão **20 LTS** ou superior.
-   - Verifique com: `node -v`
-2. **NPM**: Versão **10.x** ou superior (instalado junto com o Node.js).
-   - Verifique com: `npm -v`
-3. **Git**: Para clonagem e versionamento de código.
-   - Verifique com: `git -v`
-4. **MySQL Server**: Versão **8.0** ou superior (rodando localmente ou via container Docker).
-
-### Comandos de Clonagem (Git)
-
-Abra o seu terminal (Bash, PowerShell ou Prompt de Comando) e execute:
-
-```bash
-# Clonando o monorepositório completo
-git clone https://github.com/marcelologan/ms2cashflow-ct.git
-cd ms2cashflow-ct
-```
-
----
-
-## 5. Passo a Passo: Backend (API)
-
-### Configuração do Banco de Dados MySQL
-
-Abra seu cliente MySQL preferido (MySQL Workbench, DBeaver ou terminal) e execute o script SQL abaixo para estruturar o banco `celeste` e suas respectivas tabelas:
+Abra o seu gerenciador de banco de dados (MySQL Workbench, DBeaver, Beekeeper Studio ou terminal) e execute o script abaixo:
 
 ```sql
 -- 1. Criação do Banco de Dados
@@ -131,7 +162,7 @@ CREATE DATABASE IF NOT EXISTS celeste
 
 USE celeste;
 
--- 2. Tabela de Usuários
+-- 2. Tabela de Usuários (Única entidade base do template)
 CREATE TABLE IF NOT EXISTS usuarios (
   id INT AUTO_INCREMENT PRIMARY KEY,
   email VARCHAR(150) NOT NULL UNIQUE,
@@ -141,216 +172,199 @@ CREATE TABLE IF NOT EXISTS usuarios (
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
--- 3. Tabela de Movimentações Financeiras
-CREATE TABLE IF NOT EXISTS movimentacoes (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  usuario_id INT NOT NULL,
-  valor DECIMAL(10,2) NOT NULL,
-  tipo ENUM('entrada', 'saida') NOT NULL,
-  categoria VARCHAR(50) NOT NULL,
-  descricao VARCHAR(255) NULL,
-  data_movimentacao DATE NOT NULL,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT fk_usuario_movimentacao 
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) 
-    ON DELETE CASCADE
-);
 ```
 
-### Instalação e Arquivo `.env`
+---
 
-1. Pelo terminal, navegue até a pasta da API:
+## 6. Passo a Passo: Backend (API Express)
+
+### Instalação e Configuração (`.env`)
+
+1. No terminal, acesse o diretório da API:
    ```bash
    cd api-cashflow
    ```
 
-2. Instale todas as dependências declaradas no `package.json`:
+2. Instale as dependências:
    ```bash
    npm install
    ```
 
-3. Crie um arquivo chamado `.env` na raiz da pasta `api-cashflow` com os seguintes parâmetros:
+3. Configure o arquivo `.env` na raiz da pasta `api-cashflow` (você pode se basear no [.env.example](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Livre%20manh%C3%A3/ms2cashflow-ct/api-cashflow/.env.example)):
    ```env
-   # Porta do Servidor Express
+   # Porta da API
    PORT=3000
 
-   # Conexão com o MySQL
+   # Credenciais do MySQL
    DB_HOST=localhost
    DB_USER=root
-   DB_PASSWORD=sua_senha_mysql_aqui
+   DB_PASSWORD=sua_senha_aqui
    DB_PORT=3306
    DB_NAME=celeste
 
    # Chave Secreta para assinatura dos Tokens JWT
-   JWT_SECRET=super_secret_jwt_key_turma_desenvolvimento_2026
+   JWT_SECRET=super_secret_jwt_key_template_2026
    ```
 
-> ⚠️ **Atenção:** Em máquinas de laboratório ou ambientes com MariaDB/MySQL em instâncias paralelas, a porta padrão pode variar (ex: `3306` ou `3307`). Ajuste a variável `DB_PORT` conforme sua instalação.
+### Execução da API
 
-### Inicialização e Teste da API
-
-Inicie o servidor em modo de desenvolvimento com o comando:
+Inicie o servidor de desenvolvimento:
 
 ```bash
 npm run dev
 ```
 
-Você deverá ver no console saídas semelhantes a:
+Saída esperada no terminal:
 ```text
 🔌 Canal de comunicação com o MySQL preparado (Pool de Conexões).
 [Server] API rodando na porta 3000
 [Rotas] Mapeadas em http://localhost:3000/api/
 ```
 
-#### Testando a API via Terminal (PowerShell / cURL):
-Para validar se a API está online e pronta para responder:
+### Tabela de Endpoints
 
-```powershell
-# Teste de rota pública de registro de usuário (PowerShell)
-Invoke-RestMethod -Uri "http://localhost:3000/api/usuarios" -Method POST -ContentType "application/json" -Body '{"nome":"Aluno Teste","email":"aluno@teste.com","senha":"senhaSegura123"}'
-```
+Todas as rotas possuem o prefixo base `/api/usuarios`:
+
+| Método | Endpoint | Protegida? | Descrição | Payload / Parâmetros |
+| :---: | :--- | :---: | :--- | :--- |
+| `POST` | `/api/usuarios` | ❌ Não | Cadastra um novo usuário no banco. | `{ "nome", "email", "telefone", "senha" }` |
+| `POST` | `/api/usuarios/login` | ❌ Não | Autentica o usuário e devolve o token JWT. | `{ "email", "senha" }` |
+| `POST` | `/api/usuarios/logout` | 🔒 Sim (JWT) | Registra a saída e instrui o cliente a descartar o token. | Header `Authorization: Bearer <token>` |
+| `GET` | `/api/usuarios` | 🔒 Sim (JWT) | Lista todos os usuários (exclui a senha). | Header `Authorization: Bearer <token>` |
+| `GET` | `/api/usuarios/:id` | 🔒 Sim (JWT) | Retorna os detalhes de um usuário pelo ID. | Header `Authorization: Bearer <token>` |
 
 ---
 
-## 6. Passo a Passo: Frontend (Interface Web)
+## 7. Passo a Passo: Frontend (React 19 + Vite)
 
-### Instalação e Variáveis de Conexão
+### Instalação
 
-1. Abra uma **nova aba ou janela de terminal** (mantenha o backend rodando na anterior) e navegue até a pasta do frontend:
+1. Abra uma **nova aba ou janela de terminal** e acesse a pasta do frontend:
    ```bash
    cd front-cashflow
    ```
 
-2. Instale os pacotes necessários:
+2. Instale as dependências:
    ```bash
    npm install
    ```
 
-3. **Apontamento de URL da API:**  
-   O frontend está configurado para consumir o backend em `http://localhost:3000/api`. Caso o seu backend esteja em outra porta ou IP, verifique os arquivos:
-   - [LoginForm.tsx](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Cash%20Flow/ms2cashflow/front-cashflow/src/components/Loginform.tsx): Rota `/api/usuarios/login`
-   - [Dashboard.tsx](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Cash%20Flow/ms2cashflow/front-cashflow/src/components/pages/Dashboard.tsx): Rotas `/api/movimentacoes`
-   - [MovimentacaoModal.tsx](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Cash%20Flow/ms2cashflow/front-cashflow/src/components/MovimentacaoModal.tsx): Rotas de inclusão e edição
+### Execução da Interface Web
 
-### Execução e Portas de Acesso
-
-Execute o comando de inicialização do Vite:
+Execute o servidor Vite:
 
 ```bash
 npm run dev
 ```
 
-O terminal exibirá a URL local:
-```text
-  VITE v8.x.x  ready in 250 ms
+Acesse o sistema no navegador através do endereço exibido: **`http://localhost:5173`**.
 
-  ➜  Local:   http://localhost:5173/
-  ➜  Network: use --host to expose
-```
+### Mapeamento de Rotas da SPA
 
-Abra seu navegador em **`http://localhost:5173`**.
+- **`http://localhost:5173/` (Página Inicial):** [Cadastro.tsx](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Livre%20manh%C3%A3/ms2cashflow-ct/front-cashflow/src/components/pages/Cadastro.tsx) — Formulário de cadastro de usuários com validação instantânea, máscara de telefone e feedback visual.
+- **`http://localhost:5173/login`:** [Login.tsx](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Livre%20manh%C3%A3/ms2cashflow-ct/front-cashflow/src/components/pages/Login.tsx) — Tela de login com redirecionamento automático para a dashboard.
+- **`http://localhost:5173/dashboard`:** [Dashboard.tsx](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Livre%20manh%C3%A3/ms2cashflow-ct/front-cashflow/src/components/pages/Dashboard.tsx) — Painel autenticado que consome a rota protegida `GET /api/usuarios`, exibe os dados do usuário conectado e lista filtrável dos usuários.
 
 ---
 
-## 7. Guia de Exploração Didática e Roteiro de Testes
-
-Para fixar os conceitos e validar a integração completa entre as pontas, execute o seguinte roteiro didático:
+## 8. Fluxo de Autenticação e Roteiro de Testes
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Aluno as Aluno (Navegador)
+    actor Usuario as Usuário (Navegador)
     participant Front as Frontend (React:5173)
     participant Back as Backend (Express:3000)
     participant DB as Banco (MySQL:celeste)
 
-    Note over Aluno,DB: 1. Autenticação e Emissão de Token
-    Aluno->>Front: Informa E-mail e Senha
-    Front->>Back: POST /api/usuarios/login
+    Note over Usuario,DB: 1. Cadastro de Usuário (Página Inicial)
+    Usuario->>Front: Acessa '/' e preenche o formulário de cadastro
+    Usuario->>Front: Clica em 'Cadastrar Usuário'
+    Front->>Back: POST /api/usuarios { nome, email, telefone, senha }
+    Back->>DB: SELECT id FROM usuarios WHERE email = ? (Validação de duplicidade)
+    Back-->>Back: bcrypt.hash(senha, 10)
+    Back->>DB: INSERT INTO usuarios (...)
+    Back-->>Front: 201 Created + Mensagem de Sucesso
+    Front->>Front: Exibe FeedbackModal e redireciona para /login
+
+    Note over Usuario,DB: 2. Login e Emissão do Token JWT
+    Usuario->>Front: Informa E-mail e Senha em '/login'
+    Front->>Back: POST /api/usuarios/login { email, senha }
     Back->>DB: SELECT * FROM usuarios WHERE email = ?
     Back-->>Back: bcrypt.compare(senha, hash)
-    Back-->>Front: 200 OK + JWT Token + Dados Usuário
-    Front->>Front: Armazena token no localStorage e navega para /dashboard
+    Back-->>Front: 200 OK + JWT Token + Dados do Usuário
+    Front->>Front: Salva token no localStorage ('kamikase_token') e navega para /dashboard
 
-    Note over Aluno,DB: 2. Carregamento do Painel Financeiro
-    Front->>Back: GET /api/movimentacoes (Header: Authorization Bearer)
-    Back->>Back: authMiddleware valida token JWT
-    Back->>DB: SELECT * FROM movimentacoes WHERE usuario_id = ?
-    Back-->>Front: Lista de movimentações + Somatório
-    Front->>Front: Calcula cards do mês e renderiza tabela com setas coloridas
-
-    Note over Aluno,DB: 3. Cadastro com Modal e Feedback
-    Aluno->>Front: Clica em '+ Nova Movimentação'
-    Front->>Front: Abre MovimentacaoModal.tsx
-    Aluno->>Front: Preenche valor, tipo, data e salva
-    Front->>Back: POST /api/movimentacoes (Header: Bearer Token)
-    Back->>DB: INSERT INTO movimentacoes (...)
-    Back-->>Front: 201 Created
-    Front->>Front: Exibe FeedbackModal.tsx e atualiza tabela e cards
+    Note over Usuario,DB: 3. Acesso à Área Protegida (Dashboard)
+    Front->>Back: GET /api/usuarios (Header: Authorization: Bearer <token>)
+    Back->>Back: authMiddleware valida JWT e injeta req.usuarioId
+    Back->>DB: SELECT id, email, nome, telefone, criado_em FROM usuarios
+    Back-->>Front: 200 OK + Array de Usuários
+    Front->>Front: Renderiza cards do usuário logado e tabela filtrável
 ```
 
-### Roteiro Prático:
-1. **Passo 1 — Autenticação:**
-   - Faça login na tela inicial com usuário e senha válidos.
-   - Abra o Console do Navegador (`F12` -> aba *Application* -> *Local Storage*).
-   - Observe a chave `kamikase_token` armazenada.
-2. **Passo 2 — Registro de Entrada (Receita):**
-   - No Dashboard, clique em **"+ Nova Movimentação"**.
-   - Selecione o tipo **Entrada (Crédito)**.
-   - Informe Valor: `5000.00`, Categoria: `Salário`, Descrição: `Adiantamento Mensal`, Data: hoje.
-   - Clique em **"Cadastrar Movimentação"**.
-   - Observe a exibição do **Modal de Feedback** e verifique se o card **"Entradas do Mês"** foi recalculado com a seta verde (`↑`).
-3. **Passo 3 — Registro de Saída (Despesa):**
-   - Clique novamente em **"+ Nova Movimentação"**.
-   - Selecione o tipo **Saída (Débito)**.
-   - Informe Valor: `1200.00`, Categoria: `Moradia`, Descrição: `Aluguel`, Data: hoje.
-   - Clique em salvar. Verifique se o card **"Saídas do Mês"** subiu e se o **"Saldo do Mês"** agora reflete a diferença positiva (`R$ 3.800,00`).
-4. **Passo 4 — Teste de Filtro Reativo:**
-   - No `<select>` de filtro, escolha **"Apenas Entradas"** e confirme que apenas o item de Salário é renderizado.
-   - Alterne para **"Apenas Saídas"** e depois volte para **"Todas as Movimentações"**.
-5. **Passo 5 — Edição de Registro:**
-   - Clique no ícone de lápis (Editar) da linha do Aluguel.
-   - Mude o valor para `1300.00` e confirme.
-6. **Passo 6 — Exclusão com Modal de Confirmação:**
-   - Clique no ícone de lixeira (Apagar).
-   - Veja o **Modal de Confirmação** com o aviso de segurança.
-   - Clique em **"Cancelar"** (verifique que o registro permanece).
-   - Clique novamente em apagar e depois em **"Confirmar Exclusão"**. O item desaparecerá e o saldo será recalculado.
+### Roteiro de Teste Prático:
+1. **Passo 1 — Cadastro:**
+   - Acesse `http://localhost:5173/`.
+   - Preencha Nome, E-mail, Telefone e Senha (mínimo de 6 caracteres).
+   - Confirme a criação e veja o modal de sucesso.
+2. **Passo 2 — Login:**
+   - Entre com as credenciais criadas na tela de login.
+   - Pressione `F12` no navegador e verifique a aba *Application -> Local Storage* para confirmar a presença do token JWT.
+3. **Passo 3 — Dashboard:**
+   - Visualize seu perfil autenticado no topo do painel.
+   - Teste a busca em tempo real e a listagem de usuários.
+4. **Passo 4 — Logout:**
+   - Clique em **"Sair"** no Header e certifique-se de que a sessão foi destruída e a tela de login apresentada.
 
 ---
 
-## 8. Pontos Críticos de Aprendizado Técnico
+## 9. Guia de Extensão: Como Adicionar Novas Entidades
 
-Como futuro(a) desenvolvedor(a), preste atenção especial aos seguintes conceitos arquiteturais presentes neste código:
+Este template está 100% pronto para receber novas tabelas e funcionalidades:
 
-### 1. Segurança e Hashing de Senhas (bcrypt)
-Nunca armazene senhas em texto puro no banco de dados! Em [usuarioController.ts](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Cash%20Flow/ms2cashflow/api-cashflow/src/controllers/usuarioController.ts):
-```typescript
-const salt = await bcrypt.genSalt(10);
-const senhaHash = await bcrypt.hash(senha, salt);
-```
-O *salt* garante que duas senhas idênticas gerem hashes completamente diferentes, neutralizando ataques de *rainbow table*.
+1. **Crie a Tabela no MySQL:**
+   ```sql
+   CREATE TABLE IF NOT EXISTS produtos (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     usuario_id INT NOT NULL,
+     nome VARCHAR(100) NOT NULL,
+     preco DECIMAL(10,2) NOT NULL,
+     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     CONSTRAINT fk_usuario_produto FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+   );
+   ```
 
-### 2. Autenticação Stateless com JWT e Middlewares
-Em [authMiddleware.ts](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Cash%20Flow/ms2cashflow/api-cashflow/src/middlewares/authMiddleware.ts), a aplicação intercepta todas as requisições protegidas, extrai o cabeçalho `Authorization: Bearer <token>`, valida a assinatura criptográfica e injeta o `req.usuarioId`. O servidor não precisa de sessão em memória, permitindo escalabilidade horizontal.
+2. **Crie o Model no Backend (`api-cashflow/src/models/produtoModel.ts`):**
+   - Utilize consultas parametrizadas com `db.execute()`.
 
-### 3. A Mecânica do CORS (Cross-Origin Resource Sharing)
-Como o frontend roda em `http://localhost:5173` e a API em `http://localhost:3000`, o navegador trata a comunicação como origens cruzadas. Requisições POST com `Content-Type: application/json` disparam uma requisição prévia do tipo **OPTIONS (Preflight)**. O middleware `cors()` no [server.ts](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Cash%20Flow/ms2cashflow/api-cashflow/src/server.ts) responde a esse preflight com os cabeçalhos de liberação necessários.
+3. **Crie o Controller no Backend (`api-cashflow/src/controllers/produtoController.ts`):**
+   - Acesse o ID do usuário conectado via `req.usuarioId` (injetado pelo `authMiddleware`).
 
-### 4. Proteção contra IDOR (Insecure Direct Object Reference)
-Em [movimentacaoModel.ts](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Cash%20Flow/ms2cashflow/api-cashflow/src/models/movimentacaoModel.ts), comandos de consulta, atualização ou exclusão **sempre associam o `id` da movimentação ao `usuario_id` logado**:
-```sql
-DELETE FROM movimentacoes WHERE id = ? AND usuario_id = ?
-```
-Isso impede que um usuário mal-intencionado altere ou apague dados de terceiros mudando apenas o ID na URL.
+4. **Defina as Rotas (`api-cashflow/src/routes/produtoRoutes.ts`):**
+   - Proteja as rotas que exigem autenticação com o middleware:
+   ```typescript
+   router.post('/', authMiddleware, ProdutoController.criar as any);
+   ```
+   - Registre o novo prefixo em `api-cashflow/src/routes/index.ts`:
+   ```typescript
+   router.use('/produtos', produtoRoutes);
+   ```
 
-### 5. Tipagem e Type-Only Imports no TypeScript com Vite
-No frontend moderno com empacotadores como Vite/esbuild, interfaces e types são eliminados em tempo de compilação. Importar um tipo com `import type { Movimentacao } from './types'` sinaliza ao compilador que nada precisa ser buscado no JavaScript compilado em tempo de execução, prevenindo erros de módulo no navegador.
+5. **Crie os Componentes no Frontend:**
+   - Adicione telas e formulários em `front-cashflow/src/components/pages/` e vincule em `front-cashflow/src/App.tsx`.
 
 ---
 
-## 👨‍💻 Desenvolvido com foco no aprendizado prático
-Dúvidas ou sugestões de melhorias? Abra uma issue ou envie um pull request!
+## 10. Conceitos Críticos de Segurança e Arquitetura
 
+- **Hashing com Salt (bcrypt):** Senhas nunca são guardadas em texto claro. O salt garante hashes distintos mesmo para senhas idênticas, evitando ataques por tabela arco-íris.
+- **Autenticação Stateless (JWT):** O servidor valida a integridade do token através da assinatura criptográfica sem necessidade de manter sessões em memória ou banco, facilitando escalabilidade.
+- **Fail-Fast & Sanitização:** Validações de entrada eliminam espaços desnecessários, normalizam e-mails para minúsculas e recusam requisições inválidas antes mesmo de consultar o banco.
+- **Proteção contra IDOR:** Ao associar operações sensíveis ao `usuarioId` contido no token JWT validado pelo servidor, impede-se que um usuário manipule dados de outros.
+
+---
+
+## 📄 Licença
+
+Distribuído sob a licença **MIT**. Consulte `LICENSE` para mais informações.

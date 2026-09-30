@@ -6,16 +6,20 @@ interface ConfirmacaoModalProps {
     aoConfirmar: () => void;
     aoCancelar: () => void;
     carregando?: boolean;
+    textoConfirmar?: string;
+    textoCarregando?: string;
 }
 
 export function ConfirmacaoModal({
     visivel,
-    titulo = "Excluir Movimentação",
-    mensagem = "Tem certeza que deseja excluir esta movimentação? Esta ação não poderá ser desfeita.",
+    titulo = "Confirmar Ação",
+    mensagem = "Tem certeza que deseja executar esta ação? Esta operação não poderá ser desfeita.",
     detalhe,
     aoConfirmar,
     aoCancelar,
-    carregando = false
+    carregando = false,
+    textoConfirmar = "Confirmar",
+    textoCarregando = "Processando..."
 }: ConfirmacaoModalProps) {
     if (!visivel) return null;
 
@@ -58,7 +62,7 @@ export function ConfirmacaoModal({
                         disabled={carregando}
                         className="flex-1 py-2.5 px-4 rounded-xl font-semibold text-white bg-red-600 hover:bg-red-500 transition shadow-lg shadow-red-900/30 disabled:opacity-50"
                     >
-                        {carregando ? "Excluindo..." : "Confirmar Exclusão"}
+                        {carregando ? textoCarregando : textoConfirmar}
                     </button>
                 </div>
             </div>
