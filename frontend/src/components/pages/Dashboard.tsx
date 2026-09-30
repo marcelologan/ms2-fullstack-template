@@ -145,7 +145,7 @@ export function Dashboard() {
                     <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-2">
                         <span className="font-bold text-cyan-400 block text-sm">3. Frontend React</span>
                         <p>
-                            Crie os novos componentes de páginas em <code className="text-cyan-300 font-mono">front-cashflow/src/components/pages/</code> e vincule suas rotas e links no painel.
+                            Crie os novos componentes de páginas em <code className="text-cyan-300 font-mono">frontend/src/components/pages/</code> e vincule suas rotas e links no painel.
                         </p>
                     </div>
                 </div>

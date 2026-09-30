@@ -10,7 +10,7 @@
 ![JWT](https://img.shields.io/badge/JWT-Stateless-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)
 
 > **Starter Kit & Template Monorepo Educacional e Profissional**  
-> Uma estrutura base sólida, moderna e segura para iniciar qualquer projeto Full Stack com autenticação completa, controle de sessão via JWT, hashing de senhas com bcrypt e persistência em banco relacional MySQL.
+> Uma estrutura base sólida, moderna e segura para iniciar qualquer projeto Full Stack com autenticação completa, controle de sessão via JWT, hashing de senhas com bcrypt e persistência em banco relacional MySQL com isolamento total de dados.
 
 ---
 
@@ -41,14 +41,14 @@ Este template foi projetado para eliminar o retrabalho na inicialização de nov
 
 - **Página Inicial (`/`):** Formulário de cadastro de usuário completo e responsivo com validação de dados no cliente e no servidor.
 - **Página de Login (`/login`):** Tela de autenticação com armazenamento seguro de token JWT no navegador.
-- **Painel Autenticado (`/dashboard`):** Demonstração prática do consumo de rotas privadas protegidas por Bearer Token, exibindo o perfil do usuário logado e a listagem de usuários do banco.
+- **Painel Autenticado (`/dashboard`):** Painel protegido com boas-vindas personalizadas, dados da própria conta e espaço modular reservado para acomodar novas regras de negócio.
 - **Arquitetura Desacoplada (Monorepo):** Backend e Frontend residem no mesmo repositório, facilitando versionamento conjunto enquanto mantêm total independência de execução.
 
 ```mermaid
 flowchart LR
     subgraph Frontend["Front-end (Vite + React 19)"]
         UI["Páginas: Cadastro (/), Login (/login), Dashboard (/dashboard)"]
-        State["Estados React (useState, useMemo)"]
+        State["Estados React (useState, useEffect)"]
         Fetch["Fetch HTTP com Bearer Token"]
     end
 
@@ -74,7 +74,7 @@ flowchart LR
 ## 2. Estrutura do Monorepositório
 
 ```text
-├── api-cashflow/                 # Backend RESTful (Node.js + Express + TypeScript)
+├── backend/                      # Backend RESTful (Node.js + Express + TypeScript)
 │   ├── src/
 │   │   ├── config/
 │   │   │   └── database.ts       # Pool de conexões MySQL2
@@ -86,7 +86,7 @@ flowchart LR
 │   │   │   └── usuarioModel.ts   # Consultas SQL seguras e tipadas
 │   │   ├── routes/
 │   │   │   ├── index.ts          # Centralizador de rotas (/api)
-│   │   │   └── usuarioRoutes.ts  # Endpoints de cadastro, login e consulta
+│   │   │   └── usuarioRoutes.ts  # Endpoints de cadastro, login e logout
 │   │   ├── types/
 │   │   │   └── index.ts          # Interfaces e tipos do TypeScript
 │   │   └── server.ts             # Inicialização do servidor Express com CORS e JSON
@@ -94,13 +94,13 @@ flowchart LR
 │   ├── package.json
 │   └── tsconfig.json
 │
-├── front-cashflow/               # Frontend SPA (React 19 + TypeScript + Vite + Tailwind 4)
+├── frontend/                     # Frontend SPA (React 19 + TypeScript + Vite + Tailwind 4)
 │   ├── src/
 │   │   ├── components/
 │   │   │   ├── pages/
 │   │   │   │   ├── Cadastro.tsx  # Página Inicial com formulário de cadastro
 │   │   │   │   ├── Login.tsx     # Página de autenticação
-│   │   │   │   └── Dashboard.tsx # Área restrita e listagem de usuários
+│   │   │   │   └── Dashboard.tsx # Área restrita modular e boas-vindas
 │   │   │   ├── CadastroForm.tsx  # Componente isolado de cadastro com validações
 │   │   │   ├── Loginform.tsx     # Componente isolado de login
 │   │   │   ├── Header.tsx        # Barra de navegação responsiva com estado dinâmico
@@ -113,65 +113,64 @@ flowchart LR
 │   │   └── index.css             # Importação do Tailwind CSS v4
 │   ├── package.json
 │   ├── vite.config.ts
-│   └── tsconfig.json
+│   └── index.html
 │
-└── README.md                     # Documentação oficial do projeto
+└── README.md                     # Documentação mestre do projeto
 ```
 
 ---
 
 ## 3. Stack Tecnológica
 
-| Camada | Tecnologia | Versão | Função Principal |
-| :--- | :--- | :--- | :--- |
-| **Backend** | **Node.js** | `>= 20.x` | Ambiente de execução JavaScript server-side. |
-| **Backend** | **Express** | `^5.x` | Framework HTTP para criação de rotas, middlewares e APIs REST. |
-| **Backend** | **TypeScript** | `^5.x / 7.x` | Tipagem estática para robustez e manutenção do código. |
-| **Backend** | **MySQL2 (Promise)** | `^3.x` | Driver de alta performance com Pool de Conexões assíncrono. |
-| **Backend** | **bcrypt** | `^6.x` | Algoritmo com *salt* para hashing criptográfico de senhas. |
-| **Backend** | **jsonwebtoken (JWT)** | `^9.x` | Autenticação stateless baseada em token com expiração. |
-| **Backend** | **CORS** | `^2.x` | Middleware de liberação de requisições cross-origin. |
-| **Backend** | **tsx** | `^4.x` | Execução ágil de TypeScript com recarregamento em tempo real (*watch*). |
-| **Frontend** | **React** | `^19.x` | Biblioteca componentizada para interfaces declarativas modernas. |
-| **Frontend** | **Vite** | `^8.x` | Bundler e servidor de desenvolvimento ultra-rápido com HMR. |
-| **Frontend** | **Tailwind CSS** | `^4.x` | Framework utilitário moderno e altamente responsivo. |
-| **Frontend** | **React Router DOM** | `^7.x` | Gerenciamento de rotas e navegação SPA client-side. |
-| **Database** | **MySQL** | `^8.x` | Banco de dados relacional (banco `celeste`). |
+| Camada | Tecnologia | Versão | Papel na Aplicação |
+| :--- | :--- | :---: | :--- |
+| **Backend Runtime** | Node.js | `20+ LTS` | Ambiente de execução JavaScript assíncrono. |
+| **Backend Framework** | Express | `5.x` | Criação de rotas, middlewares e APIs RESTful. |
+| **Linguagem Principal** | TypeScript | `5.x` | Tipagem estática, interfaces e detecção de erros em tempo de compilação. |
+| **Banco de Dados** | MySQL | `8.x` | Banco relacional com integridade referencial e índices únicos. |
+| **Driver de Conexão** | `mysql2/promise` | `3.x` | Conexões via Pool com suporte nativo a Promises (`async/await`). |
+| **Criptografia** | `bcrypt` | `6.x` | Algoritmo de hash adaptativo com salt (custo 10) para proteção de senhas. |
+| **Segurança & Sessão** | `jsonwebtoken` | `9.x` | Emissão e validação de tokens JWT stateless. |
+| **Frontend Framework** | React | `19.x` | Interface declarativa baseada em componentes funcionais. |
+| **Bundler & Build Tool** | Vite | `8.x` | Servidor de desenvolvimento ultrarrápido com Hot Module Replacement (HMR). |
+| **Estilização** | Tailwind CSS | `4.x` | Estilização utilitária moderna com suporte nativo a transições e temas. |
+| **Roteamento Web** | React Router DOM | `7.x` | Navegação cliente sem recarregar a página (SPA). |
 
 ---
 
 ## 4. Pré-requisitos
 
-Antes de iniciar, certifique-se de possuir em seu computador:
-1. **Node.js** (versão 20 LTS ou superior) — verifique com `node -v`
-2. **NPM** (versão 10.x ou superior) — verifique com `npm -v`
-3. **Git** — verifique com `git -v`
-4. **MySQL Server** (versão 8.0+) em execução localmente ou via Docker.
+Antes de iniciar, certifique-se de possuir em seu sistema:
+
+- **Node.js**: Versão 20 LTS ou superior instalada (`node -v`).
+- **NPM**: Gerenciador de pacotes (`npm -v`).
+- **Servidor MySQL**: Instância local ou remota ativa (porta padrão `3306` ou `3307`).
+- **Git**: Para controle de versão.
 
 ---
 
 ## 5. Passo a Passo: Banco de Dados
 
-Abra o seu gerenciador de banco de dados (MySQL Workbench, DBeaver, Beekeeper Studio ou terminal) e execute o script abaixo:
+Crie o banco de dados e a tabela de usuários executando o script SQL a seguir no seu cliente MySQL preferido (DBeaver, MySQL Workbench ou terminal):
 
 ```sql
 -- 1. Criação do Banco de Dados
 CREATE DATABASE IF NOT EXISTS celeste
-  CHARACTER SET utf8mb4 
+  CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
 USE celeste;
 
--- 2. Tabela de Usuários (Única entidade base do template)
+-- 2. Criação da Tabela de Usuários
 CREATE TABLE IF NOT EXISTS usuarios (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  email VARCHAR(150) NOT NULL UNIQUE,
+  email VARCHAR(191) NOT NULL UNIQUE,
   nome VARCHAR(100) NULL,
   telefone VARCHAR(20) NULL,
   senha VARCHAR(255) NOT NULL,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB;
 ```
 
 ---
@@ -182,7 +181,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
 1. No terminal, acesse o diretório da API:
    ```bash
-   cd api-cashflow
+   cd backend
    ```
 
 2. Instale as dependências:
@@ -190,7 +189,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
    npm install
    ```
 
-3. Configure o arquivo `.env` na raiz da pasta `api-cashflow` (você pode se basear no [.env.example](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Livre%20manh%C3%A3/ms2cashflow-ct/api-cashflow/.env.example)):
+3. Configure o arquivo `.env` na raiz da pasta `backend` (você pode se basear no `backend/.env.example`):
    ```env
    # Porta da API
    PORT=3000
@@ -223,15 +222,13 @@ Saída esperada no terminal:
 
 ### Tabela de Endpoints
 
-Todas as rotas possuem o prefixo base `/api/usuarios`:
+Todas as rotas possuem o prefixo base `/api/usuarios` com foco no **isolamento de dados**:
 
 | Método | Endpoint | Protegida? | Descrição | Payload / Parâmetros |
 | :---: | :--- | :---: | :--- | :--- |
 | `POST` | `/api/usuarios` | ❌ Não | Cadastra um novo usuário no banco. | `{ "nome", "email", "telefone", "senha" }` |
 | `POST` | `/api/usuarios/login` | ❌ Não | Autentica o usuário e devolve o token JWT. | `{ "email", "senha" }` |
 | `POST` | `/api/usuarios/logout` | 🔒 Sim (JWT) | Registra a saída e instrui o cliente a descartar o token. | Header `Authorization: Bearer <token>` |
-| `GET` | `/api/usuarios` | 🔒 Sim (JWT) | Lista todos os usuários (exclui a senha). | Header `Authorization: Bearer <token>` |
-| `GET` | `/api/usuarios/:id` | 🔒 Sim (JWT) | Retorna os detalhes de um usuário pelo ID. | Header `Authorization: Bearer <token>` |
 
 ---
 
@@ -241,7 +238,7 @@ Todas as rotas possuem o prefixo base `/api/usuarios`:
 
 1. Abra uma **nova aba ou janela de terminal** e acesse a pasta do frontend:
    ```bash
-   cd front-cashflow
+   cd frontend
    ```
 
 2. Instale as dependências:
@@ -261,9 +258,9 @@ Acesse o sistema no navegador através do endereço exibido: **`http://localhost
 
 ### Mapeamento de Rotas da SPA
 
-- **`http://localhost:5173/` (Página Inicial):** [Cadastro.tsx](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Livre%20manh%C3%A3/ms2cashflow-ct/front-cashflow/src/components/pages/Cadastro.tsx) — Formulário de cadastro de usuários com validação instantânea, máscara de telefone e feedback visual.
-- **`http://localhost:5173/login`:** [Login.tsx](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Livre%20manh%C3%A3/ms2cashflow-ct/front-cashflow/src/components/pages/Login.tsx) — Tela de login com redirecionamento automático para a dashboard.
-- **`http://localhost:5173/dashboard`:** [Dashboard.tsx](file:///c:/Users/SENNITT67/OneDrive%20-%20Firjan/Documentos/Projeto%20Livre%20manh%C3%A3/ms2cashflow-ct/front-cashflow/src/components/pages/Dashboard.tsx) — Painel autenticado que consome a rota protegida `GET /api/usuarios`, exibe os dados do usuário conectado e lista filtrável dos usuários.
+- **`http://localhost:5173/` (Página Inicial):** Formulário de cadastro de usuários com validação instantânea, máscara de telefone e feedback visual.
+- **`http://localhost:5173/login`:** Tela de login com redirecionamento automático para o dashboard.
+- **`http://localhost:5173/dashboard`:** Painel autenticado com boas-vindas ao usuário, exibição dos dados da própria conta e espaço modular reservado para futuros módulos.
 
 ---
 
@@ -273,59 +270,40 @@ Acesse o sistema no navegador através do endereço exibido: **`http://localhost
 sequenceDiagram
     autonumber
     actor Usuario as Usuário (Navegador)
-    participant Front as Frontend (React:5173)
-    participant Back as Backend (Express:3000)
-    participant DB as Banco (MySQL:celeste)
+    participant Front as Frontend (React 19)
+    participant API as API Express (Backend)
+    participant DB as Banco MySQL
 
-    Note over Usuario,DB: 1. Cadastro de Usuário (Página Inicial)
-    Usuario->>Front: Acessa '/' e preenche o formulário de cadastro
-    Usuario->>Front: Clica em 'Cadastrar Usuário'
-    Front->>Back: POST /api/usuarios { nome, email, telefone, senha }
-    Back->>DB: SELECT id FROM usuarios WHERE email = ? (Validação de duplicidade)
-    Back-->>Back: bcrypt.hash(senha, 10)
-    Back->>DB: INSERT INTO usuarios (...)
-    Back-->>Front: 201 Created + Mensagem de Sucesso
-    Front->>Front: Exibe FeedbackModal e redireciona para /login
+    Note over Usuario,DB: 1. Fluxo de Cadastro
+    Usuario->>Front: Preenche Nome, E-mail, Telefone e Senha
+    Front->>API: POST /api/usuarios (JSON)
+    API->>API: Valida e-mail único e gera Hash bcrypt (Salt 10)
+    API->>DB: INSERT INTO usuarios (...)
+    DB-->>API: Confirmação de inserção (ID)
+    API-->>Front: 201 Created (sucesso)
+    Front-->>Usuario: Modal de sucesso com redirecionamento ao Login
 
-    Note over Usuario,DB: 2. Login e Emissão do Token JWT
-    Usuario->>Front: Informa E-mail e Senha em '/login'
-    Front->>Back: POST /api/usuarios/login { email, senha }
-    Back->>DB: SELECT * FROM usuarios WHERE email = ?
-    Back-->>Back: bcrypt.compare(senha, hash)
-    Back-->>Front: 200 OK + JWT Token + Dados do Usuário
-    Front->>Front: Salva token no localStorage ('kamikase_token') e navega para /dashboard
-
-    Note over Usuario,DB: 3. Acesso à Área Protegida (Dashboard)
-    Front->>Back: GET /api/usuarios (Header: Authorization: Bearer <token>)
-    Back->>Back: authMiddleware valida JWT e injeta req.usuarioId
-    Back->>DB: SELECT id, email, nome, telefone, criado_em FROM usuarios
-    Back-->>Front: 200 OK + Array de Usuários
-    Front->>Front: Renderiza cards do usuário logado e tabela filtrável
+    Note over Usuario,DB: 2. Fluxo de Login e Sessão
+    Usuario->>Front: Submete E-mail e Senha
+    Front->>API: POST /api/usuarios/login
+    API->>DB: SELECT * FROM usuarios WHERE email = ?
+    DB-->>API: Retorna hash da senha
+    API->>API: bcrypt.compare(senha, hash)
+    API->>API: jwt.sign({ id }, secret, { expiresIn: '24h' })
+    API-->>Front: 200 OK + Token JWT + Dados do Usuário
+    Front->>Front: Salva Token no localStorage
+    Front-->>Usuario: Redireciona para /dashboard
 ```
-
-### Roteiro de Teste Prático:
-1. **Passo 1 — Cadastro:**
-   - Acesse `http://localhost:5173/`.
-   - Preencha Nome, E-mail, Telefone e Senha (mínimo de 6 caracteres).
-   - Confirme a criação e veja o modal de sucesso.
-2. **Passo 2 — Login:**
-   - Entre com as credenciais criadas na tela de login.
-   - Pressione `F12` no navegador e verifique a aba *Application -> Local Storage* para confirmar a presença do token JWT.
-3. **Passo 3 — Dashboard:**
-   - Visualize seu perfil autenticado no topo do painel.
-   - Teste a busca em tempo real e a listagem de usuários.
-4. **Passo 4 — Logout:**
-   - Clique em **"Sair"** no Header e certifique-se de que a sessão foi destruída e a tela de login apresentada.
 
 ---
 
 ## 9. Guia de Extensão: Como Adicionar Novas Entidades
 
-Este template está 100% pronto para receber novas tabelas e funcionalidades:
+Para adicionar novas funcionalidades (exemplo: Módulo de Produtos ou Finanças):
 
-1. **Crie a Tabela no MySQL:**
+1. **Crie a Tabela no Banco com Chave Estrangeira:**
    ```sql
-   CREATE TABLE IF NOT EXISTS produtos (
+   CREATE TABLE produtos (
      id INT AUTO_INCREMENT PRIMARY KEY,
      usuario_id INT NOT NULL,
      nome VARCHAR(100) NOT NULL,
@@ -335,24 +313,24 @@ Este template está 100% pronto para receber novas tabelas e funcionalidades:
    );
    ```
 
-2. **Crie o Model no Backend (`api-cashflow/src/models/produtoModel.ts`):**
+2. **Crie o Model no Backend (`backend/src/models/produtoModel.ts`):**
    - Utilize consultas parametrizadas com `db.execute()`.
 
-3. **Crie o Controller no Backend (`api-cashflow/src/controllers/produtoController.ts`):**
+3. **Crie o Controller no Backend (`backend/src/controllers/produtoController.ts`):**
    - Acesse o ID do usuário conectado via `req.usuarioId` (injetado pelo `authMiddleware`).
 
-4. **Defina as Rotas (`api-cashflow/src/routes/produtoRoutes.ts`):**
+4. **Defina as Rotas (`backend/src/routes/produtoRoutes.ts`):**
    - Proteja as rotas que exigem autenticação com o middleware:
    ```typescript
    router.post('/', authMiddleware, ProdutoController.criar as any);
    ```
-   - Registre o novo prefixo em `api-cashflow/src/routes/index.ts`:
+   - Registre o novo prefixo em `backend/src/routes/index.ts`:
    ```typescript
    router.use('/produtos', produtoRoutes);
    ```
 
 5. **Crie os Componentes no Frontend:**
-   - Adicione telas e formulários em `front-cashflow/src/components/pages/` e vincule em `front-cashflow/src/App.tsx`.
+   - Adicione telas e formulários em `frontend/src/components/pages/` e vincule em `frontend/src/App.tsx`.
 
 ---
 
@@ -361,7 +339,7 @@ Este template está 100% pronto para receber novas tabelas e funcionalidades:
 - **Hashing com Salt (bcrypt):** Senhas nunca são guardadas em texto claro. O salt garante hashes distintos mesmo para senhas idênticas, evitando ataques por tabela arco-íris.
 - **Autenticação Stateless (JWT):** O servidor valida a integridade do token através da assinatura criptográfica sem necessidade de manter sessões em memória ou banco, facilitando escalabilidade.
 - **Fail-Fast & Sanitização:** Validações de entrada eliminam espaços desnecessários, normalizam e-mails para minúsculas e recusam requisições inválidas antes mesmo de consultar o banco.
-- **Proteção contra IDOR:** Ao associar operações sensíveis ao `usuarioId` contido no token JWT validado pelo servidor, impede-se que um usuário manipule dados de outros.
+- **Proteção contra IDOR & Isolamento:** Ao associar operações sensíveis ao `usuarioId` contido no token JWT validado pelo servidor, impede-se que um usuário manipule dados de outros.
 
 ---
 
